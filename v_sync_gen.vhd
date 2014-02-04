@@ -36,7 +36,7 @@ entity v_sync_gen is
            v_sync : out  STD_LOGIC;
            blank : out  STD_LOGIC;
            completed : out  STD_LOGIC;
-           row : out  unsigned(10 downto 0);
+           row : out  unsigned(10 downto 0));
 end v_sync_gen;
 
 architecture Behavioral of v_sync_gen is
