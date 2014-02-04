@@ -42,6 +42,12 @@ architecture Behavioral of pixel_gen is
 
 begin
 
+	
+		r <= "11111111" when blank = '0' else (others => '0');
+		g <= (others => '0');
+		b <= (others => '0');
+	
+
 
 end Behavioral;
 
