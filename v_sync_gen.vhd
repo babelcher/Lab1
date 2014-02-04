@@ -32,7 +32,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity v_sync_gen is
     Port ( clk : in  STD_LOGIC;
            reset : in  STD_LOGIC;
-           h_blank : in  STD_LOGIC;
+           h_completed : in  STD_LOGIC;
            v_sync : out  STD_LOGIC;
            blank : out  STD_LOGIC;
            completed : out  STD_LOGIC;
@@ -41,8 +41,54 @@ end v_sync_gen;
 
 architecture Behavioral of v_sync_gen is
 
+signal count: unsigned(10 downto 0):= "00000000000";
+signal count_next: unsigned(10 downto 0);
+
 begin
+count_next <= count + 1;
+	process(reset)
+	begin			
+		if(reset='1') then
+			v_sync <= '0';
+			count <= "00000000000";
+			blank <= '1';
+			completed <= '0';
+		end if;
+	end process;
+	
+	process(clk, h_completed)
+	begin
+		if(clk'event and clk='1' and h_completed) then
+			if(count < 480) then
+				v_sync <= '1';
+				count <= count_next;
+				blank <= '0';
+				completed <= '0';
+			elsif(count < 490) then
+				v_sync <= '1';
+				count <= count_next;
+				blank <= '1';
+				completed <= '0';
+			elsif(count < 492) then
+				v_sync <= '0';
+				count <= count_next;
+				blank <= '1';
+				completed <= '0';
+			elsif(count < 524) then
+				v_sync <= '1';
+				count <= count_next;
+				blank <= '1';
+				completed <= '0';
+			else
+				v_sync <= '1';
+				count <= 0;
+				blank <= '1';
+				completed <= '1';
+			end if;
+		end if;
+	end process;
 
-
+row <= std_logic_vector(count) when count < 480 else "00000000000";
+	
 end Behavioral;
 

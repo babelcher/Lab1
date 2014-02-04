@@ -43,7 +43,6 @@ architecture Behavioral of h_sync_gen is
 signal count: unsigned(10 downto 0):= "00000000000";
 signal count_next: unsigned(10 downto 0);
 
-
 begin
 	count_next <= count + 1;
 	process(reset, clk)
