@@ -22,12 +22,12 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx primitives in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
+library UNISIM;
+use UNISIM.VComponents.all;
 
 entity vga_sync is
     Port ( clk : in  STD_LOGIC;
@@ -41,49 +41,32 @@ entity vga_sync is
 end vga_sync;
 
 architecture Behavioral of vga_sync is
-
-	Component h_sync_gen is
-		Port ( clk : in  STD_LOGIC;
-           reset : in  STD_LOGIC;
-           h_sync : out  STD_LOGIC;
-           blank : out  STD_LOGIC;
-           completed : out  STD_LOGIC;
-           column : out  unsigned(10 downto 0));
-	end component;
 	
-	Component v_sync_gen is
-		Port ( clk : in  STD_LOGIC;
-           reset : in  STD_LOGIC;
-           h_completed : in  STD_LOGIC;
-           v_sync : out  STD_LOGIC;
-           blank : out  STD_LOGIC;
-           completed : out  STD_LOGIC;
-           row : out  unsigned(10 downto 0));
-	end component;
-	
-signal h_completed: STD_LOGIC;
+signal h_completed_sig: STD_LOGIC;
+signal h_blank_sig, v_blank_sig: STD_LOGIC;
 
 begin
 
-	Inst_h_sync_gen: h_sync_gen PORT MAP(
+	Inst_h_sync_gen:  entity work.h_sync_gen(look_ahead_moore) PORT MAP(
 		clk => clk,
 		reset => reset,
 		h_sync => h_sync,
-		blank => blank,
-		completed => completed,
+		blank => h_blank_sig,
+		completed => h_completed_sig,
 		column => column
 	);
 	
-	Inst_v_sync_gen: v_sync_gen PORT MAP(
+	Inst_v_sync_gen: entity work.v_sync_gen(v_lookahead_buffer) PORT MAP(
 		clk => clk,
 		reset => reset,
-		h_completed => completed,
+		h_completed => h_completed_sig,
 		v_sync => v_sync,
-		blank => blank,
+		blank => v_blank_sig,
 		completed => v_completed,
 		row => row
 	);
 
+blank <= h_blank_sig or v_blank_sig;
 
 end Behavioral;
 
