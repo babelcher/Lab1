@@ -69,4 +69,3 @@ begin
 blank <= h_blank_sig or v_blank_sig;
 
 end Behavioral;
-
