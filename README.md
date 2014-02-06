@@ -11,7 +11,7 @@ The purpose of this lab was to create a VGA driver to display a test pattern on 
 
 ### Implementation
 
-![Intricate shematic](schematic.jpg)
+![Intricate shematic](schematic.JPG)
 
 ### Test/Debug
 
